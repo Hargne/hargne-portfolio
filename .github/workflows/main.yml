@@ -1,0 +1,27 @@
+name: Build & deploy main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Install Dependencies
+          run: npm i
+        - name: Build
+          run: npm run build
+        - name: deploy file to server
+          uses: AbleLincoln/push-to-sftp@v1.0
+          with:
+              host: ${{ vars.HOSTNAME }}
+              port: 22
+              username: ${{ vars.USERNAME }}
+              password: ${{ secrets.PASSWORD }}
+              sourceDir: ./dist/
+              targetDir: ./johan/
